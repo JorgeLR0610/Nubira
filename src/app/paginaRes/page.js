@@ -43,29 +43,29 @@ const EnhancedWeatherPage = () => {
     normal: {
       background: 'bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600',
       icon: '⛅',
-      name: 'Día Normal',
-      description: 'Cielo despejado con algunas nubes',
+      name: 'Normal Day',
+      description: 'Clear sky with some clouds',
       tempRange: '20-29°C'
     },
     sunny: {
       background: 'bg-gradient-to-br from-yellow-400 via-orange-400 to-red-500',
       icon: '☀️',
-      name: 'Día Caluroso',
-      description: 'Sol intenso y temperaturas altas',
+      name: 'Hot Day',
+      description: 'Intense sunligh, and warm weather',
       tempRange: '30°C+'
     },
     cloudy: {
       background: 'bg-gradient-to-br from-gray-400 via-gray-500 to-gray-600',
       icon: '☁️',
-      name: 'Día Nublado',
-      description: 'Cielo completamente cubierto de nubes',
+      name: 'Cloudy Day',
+      description: 'Cloud covered sky',
       tempRange: '10-19°C'
     },
     rainy: {
       background: 'bg-gradient-to-br from-blue-600 via-blue-700 to-gray-800',
       icon: '🌧️',
-      name: 'Día Lluvioso',
-      description: 'Lluvia persistente durante el día',
+      name: 'Rainy Day',
+      description: 'persistent precipitation trought the day',
       tempRange: '0-9°C'
     }
   };
@@ -76,7 +76,7 @@ const EnhancedWeatherPage = () => {
     <div className={`min-h-screen transition-all duration-1000 ${currentWeather.background}`}>
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-4xl font-bold text-white text-center mb-2">
-          App del Clima
+          Weather App
         </h1>
         <p className="text-black text-center opacity-80 mb-8">
           El fondo cambia automáticamente según la temperatura
