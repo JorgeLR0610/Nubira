@@ -100,7 +100,7 @@ export default function Home() {
                 🗺️ Cambiar Ubicación
               </button>
               <a
-                href={`/pronostico`}
+                href="/paginaRes"
                 className="mt-4 inline-block px-4 py-2 bg-purple-600 text-white rounded transition transform duration-300 hover:scale-105 hover:bg-purple-700 text-sm"
               >
                 🔮 Pronóstico del Clima
@@ -127,94 +127,22 @@ export default function Home() {
         onLocationSelect={handleLocationSelect}
       />
 
-      <style jsx>{`
-        .planet {
-          position: absolute;
-          border-radius: 50%;
-          opacity: 0.9;
-          animation-timing-function: linear;
-        }
-        .planet-1 {
-          width: 50px;
-          height: 50px;
-          background: radial-gradient(circle at 30% 30%, #fbbf24 70%, #f59e42 100%);
-          top: 10%;
-          left: 5%;
-          animation: move1 12s infinite alternate;
-        }
-        .planet-2 {
-          width: 30px;
-          height: 30px;
-          background: radial-gradient(circle at 60% 60%, #60a5fa 70%, #2563eb 100%);
-          top: 70%;
-          left: 80%;
-          animation: move2 10s infinite alternate;
-        }
-        .planet-3 {
-          width: 40px;
-          height: 40px;
-          background: radial-gradient(circle at 50% 50%, #a78bfa 70%, #7c3aed 100%);
-          top: 40%;
-          left: 60%;
-          animation: move3 14s infinite alternate;
-        }
-        .planet-4 {
-          width: 20px;
-          height: 20px;
-          background: radial-gradient(circle at 70% 70%, #34d399 70%, #059669 100%);
-          top: 80%;
-          left: 20%;
-          animation: move4 9s infinite alternate;
-        }
-        @keyframes move1 {
-          0% { transform: translateY(0) translateX(0);}
-          100% { transform: translateY(100px) translateX(60vw);}
-        }
-        @keyframes move2 {
-          0% { transform: translateY(0) translateX(0);}
-          100% { transform: translateY(-120px) translateX(-70vw);}
-        }
-        @keyframes move3 {
-          0% { transform: translateY(0) translateX(0);}
-          100% { transform: translateY(80px) translateX(-40vw);}
-        }
-        @keyframes move4 {
-          0% { transform: translateY(0) translateX(0);}
-          100% { transform: translateY(-60px) translateX(50vw);}
-        }
-        .star {
-          position: absolute;
-          width: 6px;
-          height: 6px;
-          background: white;
-          border-radius: 50%;
-          opacity: 0.8;
-          animation: twinkle 3s infinite alternate;
-        }
+        <div className="min-h-screen flex items-center justify-center bg-gray-950 relative overflow-hidden">
+      {/* Fondo animado de planetas 3D con texturas */}
+      <ThreePlanets /> {/* o <Planets3D /> para la versión simple */}
+      
+      {/* Estrellas (mantener igual) */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <div className="star star-1"></div>
+        <div className="star star-2"></div>
+        {/* ... resto de estrellas igual */}
+      </div>
 
-        /* Posiciones diferentes */
-        .star-1 { top: 20%; left: 15%; animation-delay: 0s; }
-        .star-2 { top: 40%; left: 70%; animation-delay: 0.5s; }
-        .star-3 { top: 60%; left: 30%; animation-delay: 1s; }
-        .star-4 { top: 80%; left: 50%; animation-delay: 1.5s; }
-        .star-5 { top: 10%; left: 80%; animation-delay: 2s; }
-        .star-6 { top: 25%; left: 60%; animation-delay: 3s; }
-        .star-7 { top: 35%; left: 20%; animation-delay: 1s; }
-        .star-8 { top: 55%; left: 85%; animation-delay: 4s; }
-        .star-9 { top: 70%; left: 10%; animation-delay: 0.5s; }
-        .star-10 { top: 85%; left: 75%; animation-delay: 2.5s; }
-        .star-11 { top: 15%; left: 40%; animation-delay: 1.2s; }
-        .star-12 { top: 45%; left: 10%; animation-delay: 0.8s; }
-        .star-13 { top: 65%; left: 60%; animation-delay: 2.2s; }
-        .star-14 { top: 75%; left: 25%; animation-delay: 3.5s; }
-        .star-15 { top: 30%; left: 90%; animation-delay: 1.8s; }
-        .star-16 { top: 50%; left: 45%; animation-delay: 0.3s; }
-
-        @keyframes twinkle {
-          0% { opacity: 0.2; transform: scale(0.8); }
-          100% { opacity: 1; transform: scale(1.2); }
-        }
-      `}</style>
+      {/* El resto de tu código permanece igual */}
+      <div className="text-center z-10 relative">
+        {/* ... tu contenido existente */}
+      </div>
+    </div>
 
 
     </div>
