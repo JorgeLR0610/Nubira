@@ -1,0 +1,114 @@
+@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Importar CSS de Leaflet */
+@import 'leaflet/dist/leaflet.css';
+
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+}
+
+:root {
+  --background: #3aceff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #1a036c;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+.space-bg {
+  @apply bg-gradient-to-b from-gray-900 via-slate-900 to-blue-950;
+}
+
+@layer utilities {
+  @keyframes move1 {
+    0% { transform: translateY(0) translateX(0); }
+    100% { transform: translateY(100px) translateX(60vw); }
+  }
+  @keyframes move2 {
+    0% { transform: translateY(0) translateX(0); }
+    100% { transform: translateY(-120px) translateX(-70vw); }
+  }
+  @keyframes move3 {
+    0% { transform: translateY(0) translateX(0); }
+    100% { transform: translateY(80px) translateX(-40vw); }
+  }
+  @keyframes move4 {
+    0% { transform: translateY(0) translateX(0); }
+    100% { transform: translateY(-60px) translateX(50vw); }
+  }
+
+  .animate-move1 { animation: move1 12s infinite alternate linear; }
+  .animate-move2 { animation: move2 10s infinite alternate linear; }
+  .animate-move3 { animation: move3 14s infinite alternate linear; }
+  .animate-move4 { animation: move4 9s infinite alternate linear; }
+
+  /* Planetas con gradientes */
+  .planet-1 { background: radial-gradient(circle at 30% 30%, #fbbf24 70%, #f59e42 100%); }
+  .planet-2 { background: radial-gradient(circle at 60% 60%, #60a5fa 70%, #2563eb 100%); }
+  .planet-3 { background: radial-gradient(circle at 50% 50%, #a78bfa 70%, #7c3aed 100%); }
+  .planet-4 { background: radial-gradient(circle at 70% 70%, #34d399 70%, #059669 100%); }
+}
+
+.star {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.8;
+  animation: twinkle 3s infinite alternate;
+}
+
+/* Posiciones diferentes */
+.star-1 { top: 20%; left: 15%; animation-delay: 0s; }
+.star-2 { top: 40%; left: 70%; animation-delay: 0.5s; }
+.star-3 { top: 60%; left: 30%; animation-delay: 1s; }
+.star-4 { top: 80%; left: 50%; animation-delay: 1.5s; }
+.star-5 { top: 10%; left: 80%; animation-delay: 2s; }
+.star-6 { top: 25%; left: 60%; animation-delay: 3s; }
+.star-7 { top: 35%; left: 20%; animation-delay: 1s; }
+.star-8 { top: 55%; left: 85%; animation-delay: 4s; }
+.star-9 { top: 70%; left: 10%; animation-delay: 0.5s; }
+.star-10 { top: 85%; left: 75%; animation-delay: 2.5s; }
+.star-11 { top: 15%; left: 40%; animation-delay: 1.2s; }
+.star-12 { top: 45%; left: 10%; animation-delay: 0.8s; }
+.star-13 { top: 65%; left: 60%; animation-delay: 2.2s; }
+.star-14 { top: 75%; left: 25%; animation-delay: 3.5s; }
+.star-15 { top: 30%; left: 90%; animation-delay: 1.8s; }
+.star-16 { top: 50%; left: 45%; animation-delay: 0.3s; }
+.star-17 { top: 12%; left: 25%; animation-delay: 2.8s; }
+.star-18 { top: 22%; left: 75%; animation-delay: 1.6s; }
+.star-19 { top: 42%; left: 55%; animation-delay: 3.2s; }
+.star-20 { top: 58%; left: 15%; animation-delay: 2.4s; }
+.star-21 { top: 72%; left: 88%; animation-delay: 0.7s; }
+.star-22 { top: 83%; left: 35%; animation-delay: 1.9s; }
+.star-23 { top: 88%; left: 60%; animation-delay: 2.7s; }
+.star-24 { top: 90%; left: 20%; animation-delay: 3.8s; }
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
