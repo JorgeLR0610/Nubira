@@ -17,7 +17,7 @@ export default function Home() {
   };
 
   const handleLocationSelect = (location) => {
-    console.log('📍 Ubicación seleccionada:', location);
+    console.log('📍 Location selected:', location);
     setSelectedLocation(location);
     setShowButton(false); 
   };
@@ -25,31 +25,121 @@ export default function Home() {
   const [showButton, setShowButton] = useState(true);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-950 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center space-bg relative overflow-hidden">
       {/* Fondo animado de planetas y estrellas */}
       <div className="absolute inset-0 pointer-events-none z-0">
         {/* Planetas */}
-        <div className="planet planet-1"></div>
-        <div className="planet planet-2"></div>
-        <div className="planet planet-3"></div>
-        <div className="planet planet-4"></div>
+        {/* PLANETA 1 - Tipo Tierra/Planeta Rocoso */}
+        <div
+          className="absolute rounded-full w-[50px] h-[50px] top-[10%] left-[5%] animate-move1 overflow-hidden z-5"
+          style={{
+            background: 'radial-gradient(circle at 30% 30%, #fbbf24 70%, #f59e42 100%)',
+          }}
+        >
+          <div
+            className="w-full h-full rounded-full opacity-70"
+            style={{
+              background: `
+                radial-gradient(circle at 20% 30%, rgba(139, 69, 19, 0.3) 0%, transparent 20%),
+                radial-gradient(circle at 70% 60%, rgba(105, 105, 105, 0.4) 0%, transparent 25%),
+                radial-gradient(circle at 40% 80%, rgba(178, 34, 34, 0.25) 0%, transparent 15%),
+                radial-gradient(circle at 80% 20%, rgba(47, 79, 79, 0.35) 0%, transparent 18%),
+                radial-gradient(circle at 60% 40%, rgba(160, 82, 45, 0.3) 0%, transparent 22%)
+              `,
+            }}
+          ></div>
+        </div>
+
+        {/* PLANETA 2 - Tipo Gaseoso con Bandas */}
+        <div
+          className="absolute rounded-full w-[30px] h-[30px] top-[70%] left-[80%] animate-move2 overflow-hidden z-5"
+          style={{ background: 'radial-gradient(circle at 60% 60%, #60a5fa 70%, #2563eb 100%)' }}
+        >
+          <div
+            className="w-full h-full rounded-full opacity-80"
+            style={{
+              background: `
+                linear-gradient(90deg, 
+                  transparent 0%, 
+                  rgba(255,255,255,0.1) 10%, 
+                  transparent 20%,
+                  rgba(37, 99, 235, 0.3) 30%,
+                  transparent 40%,
+                  rgba(96, 165, 250, 0.4) 50%,
+                  transparent 60%,
+                  rgba(255,255,255,0.15) 70%,
+                  transparent 80%,
+                  rgba(37, 99, 235, 0.25) 90%,
+                  transparent 100%
+                ),
+                radial-gradient(circle at 30% 40%, rgba(255,255,255,0.2) 0%, transparent 30%)
+              `,
+            }}
+          ></div>
+        </div>
+
+        {/* PLANETA 3 - Con cráteres y montañas */}
+        <div
+          className="absolute rounded-full w-[40px] h-[40px] top-[40%] left-[60%] animate-move3 overflow-hidden z-5"
+          style={{ background: 'radial-gradient(circle at 50% 50%, #a78bfa 70%, #7c3aed 100%)' }}
+        >
+          <div
+            className="w-full h-full rounded-full opacity-60 "
+            style={{
+              background: `
+                radial-gradient(circle at 25% 35%, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.4) 8%, transparent 12%),
+                radial-gradient(circle at 65% 70%, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.35) 6%, transparent 10%),
+                radial-gradient(circle at 45% 20%, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.3) 5%, transparent 8%),
+                radial-gradient(circle at 80% 50%, rgba(255,255,255,0.1) 0%, transparent 7%),
+                radial-gradient(circle at 30% 80%, rgba(0,0,0,0.15) 0%, transparent 6%)
+              `,
+              boxShadow: 'inset 0 0 20px rgba(0,0,0,0.3)'
+            }}
+          ></div>
+        </div>
+
+        {/* PLANETA 4 - Tipo Volcánico */}
+        <div
+          className="absolute rounded-full w-[20px] h-[20px] top-[80%] left-[20%] animate-move4 overflow-hidden z-5"
+          style={{ background: 'radial-gradient(circle at 70% 70%, #34d399 70%, #059669 100%)' }}
+        >
+          <div
+            className="w-full h-full rounded-full opacity-80"
+            style={{
+              background: `
+                radial-gradient(circle at 40% 60%, rgba(220, 38, 38, 0.4) 0%, transparent 25%),
+                radial-gradient(circle at 60% 30%, rgba(251, 146, 60, 0.3) 0%, transparent 20%),
+                radial-gradient(circle at 20% 80%, rgba(120, 53, 15, 0.35) 0%, transparent 18%),
+                radial-gradient(circle at 75% 65%, rgba(154, 52, 18, 0.4) 0%, transparent 15%)
+              `,
+            }}
+          ></div>
+        </div>
         {/* Estrellas */}
-        <div className="star star-1"></div>
-        <div className="star star-2"></div>
-        <div className="star star-3"></div>
-        <div className="star star-4"></div>
-        <div className="star star-5"></div>
-        <div className="star star-6"></div>
-        <div className="star star-7"></div>
-        <div className="star star-8"></div>
-        <div className="star star-9"></div>
-        <div className="star star-10"></div>
-        <div className="star star-11"></div>
-        <div className="star star-12"></div>
-        <div className="star star-13"></div>
-        <div className="star star-14"></div>
-        <div className="star star-15"></div>
-        <div className="star star-16"></div>
+        <div className="star star-1 z-1"></div>
+        <div className="star star-2 z-1"></div>
+        <div className="star star-3 z-1"></div>
+        <div className="star star-4 z-1"></div>
+        <div className="star star-5 z-1"></div>
+        <div className="star star-6 z-1"></div>
+        <div className="star star-7 z-1"></div>
+        <div className="star star-8 z-1"></div>
+        <div className="star star-9 z-1"></div>
+        <div className="star star-10 z-1"></div>
+        <div className="star star-11 z-1"></div>
+        <div className="star star-12 z-1"></div>
+        <div className="star star-13 z-1"></div>
+        <div className="star star-14 z-1"></div>
+        <div className="star star-15 z-1"></div>
+        <div className="star star-16 z-1"></div>
+        <div className="star star-17 z-1"></div>
+        <div className="star star-18 z-1"></div>
+        <div className="star star-19 z-1"></div>
+        <div className="star star-20 z-1"></div>
+        <div className="star star-21 z-1"></div>
+        <div className="star star-22 z-1"></div>
+        <div className="star star-23 z-1"></div>
+        <div className="star star-24 z-1"></div>
       </div>
 
       <div className="text-center z-10 relative">
@@ -58,7 +148,7 @@ export default function Home() {
             onClick={handleOpenModal}
             className="px-8 py-4 bg-blue-600 text-white rounded-lg text-xl font-semibold hover:bg-blue-700 transition transform duration-300 hover:scale-105 shadow-lg mb-6 focus:outline-none focus:ring-2 focus:ring-blue-400"
           >
-            🗺️ Abrir Mapa Profesional
+            🗺️ Open Professional Map
           </button>
         )}
         
@@ -67,27 +157,27 @@ export default function Home() {
           <div className="bg-white p-6 rounded-lg shadow-lg mt-6 max-w-md mx-auto border-2 border-green-200">
             <h3 className="font-semibold text-green-600 text-lg mb-3 flex items-center justify-center gap-2">
               <span>✅</span>
-              Ubicación Confirmada
+              Location Confirmed
             </h3>
             <div className="text-left space-y-3">
               <div>
-                <span className="font-medium text-gray-700">Coordenadas:</span>
+                <span className="font-medium text-gray-700">Coordinates:</span>
                 <div className="bg-gray-100 p-2 rounded mt-1 font-mono text-black">
                   {selectedLocation.lat.toFixed(6)}, {selectedLocation.lng.toFixed(6)}
                 </div>
               </div>
               <div>
-                <span className="font-medium text-gray-700">Dirección:</span>
+                <span className="font-medium text-gray-700">Address:</span>
                 <div className="bg-gray-100 p-2 rounded mt-1 text-sm text-gray-600 max-h-20 overflow-y-auto">
                   {selectedLocation.address}
                 </div>
               </div>
               <div>
-                <span className="font-medium text-gray-700">Fecha del Pronóstico:</span>
+                <span className="font-medium text-gray-700">Forecast Date:</span>
                 <div className="bg-gray-100 p-2 rounded mt-1 text-sm text-gray-600">
                   {selectedLocation.date
                     ? new Date(selectedLocation.date).toLocaleDateString()
-                    : 'No seleccionada'}
+                    : 'Not selected'}
                 </div>
               </div>
             </div>
@@ -97,13 +187,13 @@ export default function Home() {
                 onClick={handleOpenModal}
                 className="mt-4 px-4 py-2 bg-blue-500 text-white rounded transition transform duration-300 hover:scale-105 hover:bg-blue-600  text-sm "
               >
-                🗺️ Cambiar Ubicación
+                🗺️ Change Location
               </button>
               <a
                 href={`/pronostico`}
                 className="mt-4 inline-block px-4 py-2 bg-purple-600 text-white rounded transition transform duration-300 hover:scale-105 hover:bg-purple-700 text-sm"
               >
-                🔮 Pronóstico del Clima
+                🔮 Weather Forecast
               </a>
             </div>
           </div>
@@ -113,8 +203,8 @@ export default function Home() {
           <div className="bg-white p-6 rounded-lg shadow-lg mt-6 max-w-md mx-auto border-2 border-blue-200">
             <div className="text-center text-gray-600">
               <div className="text-4xl mb-2">🌎</div>
-              <p className="font-medium">No hay ubicación seleccionada</p>
-              <p className="text-sm mt-1">Haz click en el botón de arriba para seleccionar una ubicación en el mapa profesional</p>
+              <p className="font-medium">No location selected</p>
+              <p className="text-sm mt-1">Click the button above to select a location on the professional map</p>
             </div>
           </div>
         )}
@@ -126,97 +216,6 @@ export default function Home() {
         onClose={handleCloseModal}
         onLocationSelect={handleLocationSelect}
       />
-
-      <style jsx>{`
-        .planet {
-          position: absolute;
-          border-radius: 50%;
-          opacity: 0.9;
-          animation-timing-function: linear;
-        }
-        .planet-1 {
-          width: 50px;
-          height: 50px;
-          background: radial-gradient(circle at 30% 30%, #fbbf24 70%, #f59e42 100%);
-          top: 10%;
-          left: 5%;
-          animation: move1 12s infinite alternate;
-        }
-        .planet-2 {
-          width: 30px;
-          height: 30px;
-          background: radial-gradient(circle at 60% 60%, #60a5fa 70%, #2563eb 100%);
-          top: 70%;
-          left: 80%;
-          animation: move2 10s infinite alternate;
-        }
-        .planet-3 {
-          width: 40px;
-          height: 40px;
-          background: radial-gradient(circle at 50% 50%, #a78bfa 70%, #7c3aed 100%);
-          top: 40%;
-          left: 60%;
-          animation: move3 14s infinite alternate;
-        }
-        .planet-4 {
-          width: 20px;
-          height: 20px;
-          background: radial-gradient(circle at 70% 70%, #34d399 70%, #059669 100%);
-          top: 80%;
-          left: 20%;
-          animation: move4 9s infinite alternate;
-        }
-        @keyframes move1 {
-          0% { transform: translateY(0) translateX(0);}
-          100% { transform: translateY(100px) translateX(60vw);}
-        }
-        @keyframes move2 {
-          0% { transform: translateY(0) translateX(0);}
-          100% { transform: translateY(-120px) translateX(-70vw);}
-        }
-        @keyframes move3 {
-          0% { transform: translateY(0) translateX(0);}
-          100% { transform: translateY(80px) translateX(-40vw);}
-        }
-        @keyframes move4 {
-          0% { transform: translateY(0) translateX(0);}
-          100% { transform: translateY(-60px) translateX(50vw);}
-        }
-        .star {
-          position: absolute;
-          width: 6px;
-          height: 6px;
-          background: white;
-          border-radius: 50%;
-          opacity: 0.8;
-          animation: twinkle 3s infinite alternate;
-        }
-
-        /* Posiciones diferentes */
-        .star-1 { top: 20%; left: 15%; animation-delay: 0s; }
-        .star-2 { top: 40%; left: 70%; animation-delay: 0.5s; }
-        .star-3 { top: 60%; left: 30%; animation-delay: 1s; }
-        .star-4 { top: 80%; left: 50%; animation-delay: 1.5s; }
-        .star-5 { top: 10%; left: 80%; animation-delay: 2s; }
-        .star-6 { top: 25%; left: 60%; animation-delay: 3s; }
-        .star-7 { top: 35%; left: 20%; animation-delay: 1s; }
-        .star-8 { top: 55%; left: 85%; animation-delay: 4s; }
-        .star-9 { top: 70%; left: 10%; animation-delay: 0.5s; }
-        .star-10 { top: 85%; left: 75%; animation-delay: 2.5s; }
-        .star-11 { top: 15%; left: 40%; animation-delay: 1.2s; }
-        .star-12 { top: 45%; left: 10%; animation-delay: 0.8s; }
-        .star-13 { top: 65%; left: 60%; animation-delay: 2.2s; }
-        .star-14 { top: 75%; left: 25%; animation-delay: 3.5s; }
-        .star-15 { top: 30%; left: 90%; animation-delay: 1.8s; }
-        .star-16 { top: 50%; left: 45%; animation-delay: 0.3s; }
-
-        @keyframes twinkle {
-          0% { opacity: 0.2; transform: scale(0.8); }
-          100% { opacity: 1; transform: scale(1.2); }
-        }
-      `}</style>
-
-
     </div>
   );
 }
