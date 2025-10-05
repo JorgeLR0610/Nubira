@@ -1,66 +1,217 @@
 // app/paginaRes/page.js
 "use client"
 import { useState, useEffect } from 'react';
+import { Bar } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js';
+
+// Registrar componentes de Chart.js para gráfica de barras
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const EnhancedWeatherPage = () => {
   const [weatherType, setWeatherType] = useState('normal');
-  const [temperature, setTemperature] = useState(22); // Variable temporal en °C
-  const [precipitation, setPrecipitation] = useState(0); // Nueva variable para precipitación
-  const [windSpeed, setWindSpeed] = useState(5); // Nueva variable para velocidad del viento
+  const [temperature, setTemperature] = useState(22);
+  const [precipitation, setPrecipitation] = useState(0);
+  const [windSpeed, setWindSpeed] = useState(5);
+  const [weatherHistory, setWeatherHistory] = useState([]);
+  const [sampleCount, setSampleCount] = useState(0);
 
-  // Función para determinar el tipo de clima basado en múltiples factores
+  // Función para determinar el tipo de clima
   const getWeatherTypeFromConditions = (temp, precip, wind) => {
-    // Condiciones para tormenta eléctrica
     if (precip > 70 && wind > 30 && temp > 15) return 'thunderstorm';
-    
-    // Condiciones para granizo
     if (precip > 60 && temp <= 5) return 'hail';
-    
-    // Condiciones para nevado
     if (precip > 50 && temp <= 0) return 'snowy';
-    
-    // Condiciones originales
     if (temp >= 30) return 'sunny';
     if (temp >= 20) return 'normal';
     if (temp >= 10) return 'cloudy';
     return 'rainy';
   };
 
-  // Simular datos del backend - expandido para incluir más variables
+  // Simular datos del backend
   const simulateBackendData = () => {
-    // Temperaturas aleatorias para simular diferentes condiciones
     const temps = [-5, -2, 0, 2, 5, 8, 12, 15, 18, 22, 25, 28, 32, 35];
     const randomTemp = temps[Math.floor(Math.random() * temps.length)];
-    
-    // Precipitación aleatoria (0-100%)
     const randomPrecip = Math.floor(Math.random() * 101);
-    
-    // Velocidad del viento aleatoria (0-50 km/h)
     const randomWind = Math.floor(Math.random() * 51);
     
-    return { temp: randomTemp, precip: randomPrecip, wind: randomWind };
+    return { 
+      temp: randomTemp, 
+      precip: randomPrecip, 
+      wind: randomWind,
+      timestamp: new Date().toLocaleTimeString(),
+      id: Date.now() + Math.random() // ID único para cada muestra
+    };
   };
 
-  // Efecto para simular la obtención de datos del backend
+  // Configuración de la gráfica de barras
+  const getChartData = () => {
+    const maxSamples = 5;
+    const currentSamples = weatherHistory.slice(-maxSamples);
+    
+    const labels = currentSamples.map((data, index) => {
+      const globalIndex = weatherHistory.length - maxSamples + index + 1;
+      return `M${globalIndex}`;
+    });
+    
+    return {
+      labels,
+      datasets: [
+        {
+          label: 'Temperatura (°C)',
+          data: currentSamples.map(data => data.temp),
+          backgroundColor: 'rgba(255, 99, 132, 0.8)',
+          borderColor: 'rgb(255, 99, 132)',
+          borderWidth: 1,
+          yAxisID: 'y',
+        },
+        {
+          label: 'Precipitación (%)',
+          data: currentSamples.map(data => data.precip),
+          backgroundColor: 'rgba(54, 162, 235, 0.8)',
+          borderColor: 'rgb(54, 162, 235)',
+          borderWidth: 1,
+          yAxisID: 'y1',
+        },
+        {
+          label: 'Viento (km/h)',
+          data: currentSamples.map(data => data.wind),
+          backgroundColor: 'rgba(75, 192, 192, 0.8)',
+          borderColor: 'rgb(75, 192, 192)',
+          borderWidth: 1,
+          yAxisID: 'y2',
+        }
+      ]
+    };
+  };
+
+  const chartOptions = {
+    responsive: true,
+    interaction: {
+      mode: 'index',
+      intersect: false,
+    },
+    scales: {
+      x: {
+        grid: {
+          color: 'rgba(255, 255, 255, 0.1)'
+        },
+        ticks: {
+          color: 'white'
+        }
+      },
+      y: {
+        type: 'linear',
+        display: true,
+        position: 'left',
+        grid: {
+          color: 'rgba(255, 255, 255, 0.1)'
+        },
+        ticks: {
+          color: 'white'
+        },
+        title: {
+          display: true,
+          text: 'Temperatura (°C)',
+          color: 'white'
+        }
+      },
+      y1: {
+        type: 'linear',
+        display: true,
+        position: 'right',
+        grid: {
+          drawOnChartArea: false,
+        },
+        ticks: {
+          color: 'white'
+        },
+        title: {
+          display: true,
+          text: 'Precipitación (%)',
+          color: 'white'
+        },
+        max: 100
+      },
+      y2: {
+        type: 'linear',
+        display: false,
+      },
+    },
+    plugins: {
+      legend: {
+        position: 'top',
+        labels: {
+          color: 'white',
+          font: {
+            size: 12
+          }
+        }
+      },
+      title: {
+        display: true,
+        text: `Carrusel de Muestras - Mostrando últimas 5 de ${sampleCount} totales`,
+        color: 'white',
+        font: {
+          size: 16,
+          weight: 'bold'
+        }
+      },
+      tooltip: {
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        titleColor: 'white',
+        bodyColor: 'white',
+        borderColor: 'rgba(255, 255, 255, 0.2)',
+        borderWidth: 1
+      }
+    },
+    animation: {
+      duration: 800,
+      easing: 'easeOutQuart'
+    }
+  };
+
   useEffect(() => {
-    // Simular llamada al backend cada 5 segundos (solo para demo)
-    const interval = setInterval(() => {
+    const updateWeatherData = () => {
       const newData = simulateBackendData();
       setTemperature(newData.temp);
       setPrecipitation(newData.precip);
       setWindSpeed(newData.wind);
       setWeatherType(getWeatherTypeFromConditions(newData.temp, newData.precip, newData.wind));
-    }, 5000);
+      
+      // Incrementar el contador de muestras
+      setSampleCount(prev => prev + 1);
+      
+      // Agregar nueva muestra al historial
+      setWeatherHistory(prev => {
+        return [...prev, newData];
+      });
+    };
 
     // Datos iniciales
-    const initialData = simulateBackendData();
-    setTemperature(initialData.temp);
-    setPrecipitation(initialData.precip);
-    setWindSpeed(initialData.wind);
-    setWeatherType(getWeatherTypeFromConditions(initialData.temp, initialData.precip, initialData.wind));
+    updateWeatherData();
+
+    // Actualizar cada 5 segundos
+    const interval = setInterval(updateWeatherData, 5000);
 
     return () => clearInterval(interval);
   }, []);
+
+  // Obtener las últimas 5 muestras para mostrar
+  const currentSamples = weatherHistory.slice(-5);
 
   const weatherConfig = {
     normal: {
@@ -130,73 +281,111 @@ const EnhancedWeatherPage = () => {
           Enhanced Weather App
         </h1>
         
-        {/* Tarjeta de información del clima - Ahora con fondo blanco parcialmente transparente */}
-        <div className="bg-white/30 backdrop-blur-lg rounded-2xl p-8 max-w-md mx-auto border border-white/40 shadow-xl">
-          <div className="text-center">
-            <div className="text-6xl mb-4">{currentWeather.icon}</div>
-            <h2 className={`text-3xl font-bold mb-2 ${currentWeather.textColor}`}>
-              {currentWeather.name}
-            </h2>
-            
-            {/* Display de temperatura */}
-            <div className={`text-5xl font-bold my-4 ${currentWeather.textColor}`}>
-              {temperature}°C
-            </div>
-            
-            <p className={`opacity-90 mb-2 ${currentWeather.textColor}`}>
-              {currentWeather.description}
-            </p>
-            <p className={`opacity-80 text-sm mb-4 ${currentWeather.textColor}`}>
-              Range: {currentWeather.tempRange}
-            </p>
-            
-            {/* Información adicional de condiciones */}
-            <div className="mt-6 grid grid-cols-2 gap-4">
-              <div className="bg-black/20 rounded-lg p-3 text-white backdrop-blur-sm">
-                <div className="opacity-80 text-sm">Precipitation</div>
-                <div className="text-xl font-bold">{precipitation}%</div>
-              </div>
-              <div className="bg-black/20 rounded-lg p-3 text-white backdrop-blur-sm">
-                <div className="opacity-80 text-sm">Wind Speed</div>
-                <div className="text-xl font-bold">{windSpeed} km/h</div>
-              </div>
-            </div>
-
-            {/* Indicadores de condiciones especiales */}
-            {(weatherType === 'thunderstorm' || weatherType === 'hail') && (
-              <div className="mt-4 p-3 bg-red-500/70 rounded-lg backdrop-blur-sm">
-                <p className="text-white font-bold text-sm">
-                  ⚠️ {weatherType === 'thunderstorm' 
-                    ? 'Lightning danger - Seek shelter' 
-                    : 'Hail warning - Protect yourself'}
+        {/* Contenedor principal con información del clima y gráfica */}
+        <div className="flex flex-col lg:flex-row gap-8 max-w-6xl mx-auto">
+          
+          {/* Tarjeta de información del clima */}
+          <div className="flex-1">
+            <div className="bg-white/30 backdrop-blur-lg rounded-2xl p-8 border border-white/40 shadow-xl">
+              <div className="text-center">
+                <div className="text-6xl mb-4">{currentWeather.icon}</div>
+                <h2 className={`text-3xl font-bold mb-2 ${currentWeather.textColor}`}>
+                  {currentWeather.name}
+                </h2>
+                
+                <div className={`text-5xl font-bold my-4 ${currentWeather.textColor}`}>
+                  {temperature}°C
+                </div>
+                
+                <p className={`opacity-90 mb-2 ${currentWeather.textColor}`}>
+                  {currentWeather.description}
                 </p>
-              </div>
-            )}
-
-            {weatherType === 'snowy' && (
-              <div className="mt-4 p-3 bg-blue-500/70 rounded-lg backdrop-blur-sm">
-                <p className="text-white font-bold text-sm">
-                  ❄️ Cold weather alert - Dress warmly
+                <p className={`opacity-80 text-sm mb-4 ${currentWeather.textColor}`}>
+                  Range: {currentWeather.tempRange}
                 </p>
-              </div>
-            )}
-            
-          </div>
-        </div>
+                
+                <div className="mt-6 grid grid-cols-2 gap-4">
+                  <div className="bg-black/20 rounded-lg p-3 text-white backdrop-blur-sm">
+                    <div className="opacity-80 text-sm">Precipitation</div>
+                    <div className="text-xl font-bold">{precipitation}%</div>
+                  </div>
+                  <div className="bg-black/20 rounded-lg p-3 text-white backdrop-blur-sm">
+                    <div className="opacity-80 text-sm">Wind Speed</div>
+                    <div className="text-xl font-bold">{windSpeed} km/h</div>
+                  </div>
+                </div>
 
-        {/* Panel informativo adicional */}
-        <div className="mt-8 max-w-md mx-auto">
-          <div className="bg-black/40 rounded-xl p-6 backdrop-blur-md border border-white/20">
-            <h3 className="text-white text-xl font-bold mb-4">Weather Conditions Guide</h3>
-            <div className="space-y-2 text-white text-sm">
-              <p>❄️ <strong>Snowy:</strong> Temperature ≤ 0°C + Precipitation</p>
-              <p>🌨️ <strong>Hail:</strong> Temperature ≤ 5°C + Heavy Precipitation</p>
-              <p>⛈️ <strong>Thunderstorm:</strong> High Precipitation + Strong Wind</p>
-              <p className="text-xs opacity-70 mt-4">Updates every 5 seconds</p>
+                {(weatherType === 'thunderstorm' || weatherType === 'hail') && (
+                  <div className="mt-4 p-3 bg-red-500/70 rounded-lg backdrop-blur-sm">
+                    <p className="text-white font-bold text-sm">
+                      ⚠️ {weatherType === 'thunderstorm' 
+                        ? 'Lightning danger - Seek shelter' 
+                        : 'Hail warning - Protect yourself'}
+                    </p>
+                  </div>
+                )}
+
+                {weatherType === 'snowy' && (
+                  <div className="mt-4 p-3 bg-blue-500/70 rounded-lg backdrop-blur-sm">
+                    <p className="text-white font-bold text-sm">
+                      ❄️ Cold weather alert - Dress warmly
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
+
+          {/* Gráfica de Barras - Carrusel */}
+          <div className="flex-1">
+            <div className="bg-black/40 backdrop-blur-lg rounded-2xl p-6 border border-white/20 shadow-xl">
+              {weatherHistory.length > 0 ? (
+                <div>
+                  <Bar data={getChartData()} options={chartOptions} />
+                  
+                  {/* Información del carrusel */}
+                  <div className="mt-6 grid grid-cols-3 gap-4">
+                    <div className="bg-red-500/20 rounded-lg p-3 text-center">
+                      <div className="text-white text-sm">Temp. Actual</div>
+                      <div className="text-white font-bold text-lg">
+                        {temperature}°C
+                      </div>
+                    </div>
+                    <div className="bg-blue-500/20 rounded-lg p-3 text-center">
+                      <div className="text-white text-sm">Precip. Actual</div>
+                      <div className="text-white font-bold text-lg">
+                        {precipitation}%
+                      </div>
+                    </div>
+                    <div className="bg-green-500/20 rounded-lg p-3 text-center">
+                      <div className="text-white text-sm">Viento Actual</div>
+                      <div className="text-white font-bold text-lg">
+                        {windSpeed} km/h
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Información del carrusel */}
+                  <div className="mt-4 text-center">
+                    <div className="text-white text-sm">
+                      {`Mostrando muestras ${Math.max(1, sampleCount - 4)} a ${sampleCount} de ${sampleCount} totales`}
+                    </div>
+                    <div className="text-white text-xs opacity-70 mt-1">
+                      {sampleCount > 5 
+                        ? 'Carrusel activo - Las muestras más antiguas se desplazan fuera de la vista'
+                        : 'Completando primeras 5 muestras...'
+                      }
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center h-64">
+                  <p className="text-white text-lg">Cargando datos del clima...</p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
-        
       </div>
     </div>
   );
