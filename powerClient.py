@@ -53,5 +53,3 @@ def convert_to_csv(api_response, filename='datos.csv', filter_month=None, filter
     df = pd.DataFrame(result)
     df.to_csv(filename, index=False)
     return df
-
-
