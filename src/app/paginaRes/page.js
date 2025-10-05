@@ -30,6 +30,47 @@ const EnhancedWeatherPage = () => {
   const [address, setAddress] = useState('Loading location...');
   const [weatherHistory, setWeatherHistory] = useState([]);
   const [sampleCount, setSampleCount] = useState(0);
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  // Function to handle CSV download
+  const handleDownloadCSV = async () => {
+    setIsDownloading(true);
+    try {
+      const response = await fetch('http://localhost:8000/download-csv', {
+        method: 'GET',
+      });
+
+      if (!response.ok) {
+        throw new Error('Error downloading CSV file');
+      }
+
+      // Convertir la respuesta a blob
+      const blob = await response.blob();
+      
+      // Crear URL temporal para el blob
+      const url = window.URL.createObjectURL(blob);
+      
+      // Crear elemento <a> para descargar
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.download = `weather_data_${address.replace(/[^a-zA-Z0-9]/g, '_')}.csv`;
+      
+      // Añadir al DOM, hacer click y remover
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      
+      console.log('✅ CSV file downloaded successfully');
+      
+    } catch (error) {
+      console.error('❌ Error downloading CSV:', error);
+      alert('Error downloading CSV file');
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   // Function to determine weather type based on average temperature
   const getWeatherTypeFromConditions = (minTemp, maxTemp, precip, wind) => {
@@ -371,6 +412,30 @@ const EnhancedWeatherPage = () => {
                     <div className="opacity-80 text-sm">Wind Speed</div>
                     <div className="text-xl font-bold">{windSpeed} km/h</div>
                   </div>
+                </div>
+
+                {/* Botón de descarga en la tarjeta del clima */}
+                <div className="mt-6">
+                  <button 
+                    onClick={handleDownloadCSV}
+                    disabled={isDownloading}
+                    className={`w-full py-3 px-4 rounded-lg font-semibold transition transform duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 ${
+                      currentWeather.textColor === 'text-gray-800' 
+                        ? 'bg-green-600 text-white hover:bg-green-700' 
+                        : 'bg-green-500/90 text-white hover:bg-green-600/90'
+                    }`}
+                  >
+                    {isDownloading ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                        Downloading CSV...
+                      </>
+                    ) : (
+                      <>
+                        📥 Download Weather Data CSV
+                      </>
+                    )}
+                  </button>
                 </div>
 
                 {(weatherType === 'thunderstorm' || weatherType === 'hail') && (
