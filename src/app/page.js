@@ -154,60 +154,60 @@ export default function Home() {
         
         
         {selectedLocation && (
-          <div className="bg-white p-6 rounded-lg shadow-lg mt-6 max-w-md mx-auto border-2 border-green-200">
-            <h3 className="font-semibold text-green-600 text-lg mb-3 flex items-center justify-center gap-2">
-              <span>✅</span>
-              Location Confirmed
-            </h3>
-            <div className="text-left space-y-3">
-              <div>
-                <span className="font-medium text-gray-700">Coordinates:</span>
-                <div className="bg-gray-100 p-2 rounded mt-1 font-mono text-black">
-                  {selectedLocation.lat.toFixed(6)}, {selectedLocation.lng.toFixed(6)}
-                </div>
-              </div>
-              <div>
-                <span className="font-medium text-gray-700">Address:</span>
-                <div className="bg-gray-100 p-2 rounded mt-1 text-sm text-gray-600 max-h-20 overflow-y-auto">
-                  {selectedLocation.address}
-                </div>
-              </div>
-              <div>
-                <span className="font-medium text-gray-700">Forecast Date:</span>
-                <div className="bg-gray-100 p-2 rounded mt-1 text-sm text-gray-600">
-                  {selectedLocation.date
-                    ? new Date(selectedLocation.date).toLocaleDateString()
-                    : 'Not selected'}
-                </div>
+        <div className="bg-white/40 backdrop-blur-md p-6 rounded-lg shadow-lg mt-6 max-w-md mx-auto">
+          <h3 className="font-semibold text-black text-lg mb-3 flex items-center justify-center gap-2">
+            <span>✅</span>
+            Location Confirmed
+          </h3>
+          <div className="text-left space-y-3">
+            <div>
+              <span className="font-medium text-black">Coordinates:</span>
+              <div className="bg-gray-100/30 p-2 rounded mt-1 font-mono text-black">
+                {selectedLocation.lat.toFixed(6)}, {selectedLocation.lng.toFixed(6)}
               </div>
             </div>
-            
-            <div className="flex gap-4">
-              <button 
-                onClick={handleOpenModal}
-                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded transition transform duration-300 hover:scale-105 hover:bg-blue-600  text-sm "
-              >
-                🗺 Change Location
-              </button>
-              <a
-                href="/paginaRes"
-                className="mt-4 inline-block px-4 py-2 bg-purple-600 text-white rounded transition transform duration-300 hover:scale-105 hover:bg-purple-700 text-sm"
-              >
-                🔮 Weather Forecast
-              </a>
+            <div>
+              <span className="font-medium text-black">Address:</span>
+              <div className="bg-gray-100/30 p-2 rounded mt-1 text-sm text-black max-h-20 overflow-y-auto">
+                {selectedLocation.address}
+              </div>
+            </div>
+            <div>
+              <span className="font-medium text-black">Forecast Date:</span>
+              <div className="bg-gray-100/30 p-2 rounded mt-1 text-sm text-black">
+                {selectedLocation.date
+                  ? new Date(selectedLocation.date + 'T00:00:00').toLocaleDateString()
+                  : 'Not selected'}
+              </div>
             </div>
           </div>
-        )}
+          
+          <div className="flex gap-4">
+            <button 
+              onClick={handleOpenModal}
+              className="mt-4 px-4 py-2 bg-blue-500/90 text-white rounded transition transform duration-300 hover:scale-105 hover:bg-blue-600/90 text-sm"
+            >
+              🗺 Change Location
+            </button>
+            <a
+              href="/paginaRes"
+              className="mt-4 inline-block px-4 py-2 bg-purple-600/90 text-white rounded transition transform duration-300 hover:scale-105 hover:bg-purple-700/90 text-sm"
+            >
+              🔮 Weather Forecast
+            </a>
+          </div>
+        </div>
+      )}
 
-        {!selectedLocation && (
-          <div className="bg-white p-6 rounded-lg shadow-lg mt-6 max-w-md mx-auto border-2 border-blue-200">
-            <div className="text-center text-gray-600">
-              <div className="text-4xl mb-2">🌎</div>
-              <p className="font-medium">No location selected</p>
-              <p className="text-sm mt-1">Click the button above to select a location on the professional map</p>
-            </div>
+      {!selectedLocation && (
+        <div className="bg-white/40 backdrop-blur-md p-6 rounded-lg shadow-lg mt-6 max-w-md mx-auto">
+          <div className="text-center text-black">
+            <div className="text-4xl mb-2">🌎</div>
+            <p className="font-medium">No location selected</p>
+            <p className="text-sm mt-1">Click the button above to select a location on the professional map</p>
           </div>
-        )}
+        </div>
+      )}
       </div>
 
       {/* Modal Profesional de Mapa */}
