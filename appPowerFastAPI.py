@@ -3,8 +3,18 @@ from pydantic import BaseModel, Field
 from datetime import datetime
 import powerClient
 from neuralNetwork.weather_predictions import predict_by_date
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+# 🚀 Permitir peticiones desde cualquier origen (solo para desarrollo)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # o ["http://localhost:3000"] si quieres ser más estricto
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # ------------------ Esquema del request ------------------
 class ClimaRequest(BaseModel):
@@ -14,6 +24,7 @@ class ClimaRequest(BaseModel):
     month: int = Field(..., description="Month", ge=1, le=12)
     year: int = Field(default=2025, description="Year for prediction")
 
+res_enviar = []
 
 # ------------------ Endpoint principal ------------------
 @app.post("/clima")
@@ -29,11 +40,15 @@ def get_clima(request: ClimaRequest):
 
         # 3️⃣ Entrenar y obtener mejor epoch
         resultado = predict_by_date(request.year, request.month, request.day)
+        res = resultado["prediccion"]
+        res_enviar = res
 
         # 4️⃣ Retornar resultado
         return {
-            "mensaje": f"Predicción generada con el mejor modelo (loss={resultado['mejor_loss']:.6f})",
-            "prediccion": resultado["prediccion"]
+            "temp_max": res[0],
+            "temp_min": res[1],
+            "precipitacion": res[2],
+            "vel_viento": res[3]
         }
 
     except Exception as e:

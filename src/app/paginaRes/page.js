@@ -245,7 +245,7 @@ const EnhancedWeatherPage = () => {
     updateWeatherData();
 
     // Update every 5 seconds
-    const interval = setInterval(updateWeatherData, 5000);
+    //const interval = setInterval(updateWeatherData, 5000);
 
     return () => clearInterval(interval);
   }, []);
