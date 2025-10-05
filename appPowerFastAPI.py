@@ -15,13 +15,13 @@ class ClimaRequest(BaseModel):
 @app.post('/clima')
 def getClima(request: ClimaRequest):   
     try:
-        start = datetime(2010, 9, 6)
-        end = datetime(2010, 10, 7)
+        start = datetime(1981, 9, 6)
+        end = datetime(2024, 10, 7)
         
         raw_data = powerClient.fetch_power_daily(request.latitude, request.longitude, start, end)
-        formated_data = powerClient.convert_to_list_of_dicts(raw_data)
+        
+        formated_data = powerClient.convert_to_csv(raw_data, 'datos.csv', request.month, request.day)
            
-                     
         return #Devolver datos
         
     except Exception as e:

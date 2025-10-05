@@ -7,6 +7,10 @@ Thumbs.db
 .vscode/
 .idea/
 
+#csv files
+.csv
+
+
 # Archivos de entorno local / secretos
 .env
 .env.*.local
