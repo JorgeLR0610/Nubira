@@ -1,79 +1,81 @@
+# weather_predictions.py
 import torch
-from torch.utils.data import Dataset, DataLoader
-import torch.nn as nn
-import pandas as pd
+from torch import nn
 import numpy as np
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+from torch.utils.data import Dataset, DataLoader
+import torch.optim as optim
 
-# =========================
-# Dataset
-# =========================
-class weatherDataset(Dataset):
-    def __init__(self, frame):
-        frame = frame.replace(-999.0, np.nan).fillna(method='ffill')
-        self.x = frame[['YEAR', 'MO', 'DY']].values.astype(float)
-        self.y = frame[['T2M_MAX', 'T2M_MIN','PRECTOTCORR']].values.astype(float)
+# ------------------ Dataset ------------------
+class WeatherDataset(Dataset):
+    def __init__(self, csv_file):
+        self.data = pd.read_csv(csv_file)
+
+        # Variables de entrada
+        self.features = self.data[["year", "month", "day"]].values
+        # Variables objetivo
+        self.labels = self.data[["T2M_MAX", "T2M_MIN", "PRECTOTCORR"]].values
+
+        # Escaladores (solo en memoria)
+        self.scaler_x = StandardScaler()
+        self.scaler_y = StandardScaler()
+
+        self.features = self.scaler_x.fit_transform(self.features)
+        self.labels = self.scaler_y.fit_transform(self.labels)
 
     def __len__(self):
-        return len(self.x)
+        return len(self.data)
 
     def __getitem__(self, idx):
-        X = torch.tensor(self.x[idx], dtype=torch.float32)
-        y = torch.tensor(self.y[idx], dtype=torch.float32)
-        return X, y
+        x = torch.tensor(self.features[idx], dtype=torch.float32)
+        y = torch.tensor(self.labels[idx], dtype=torch.float32)
+        return x, y
 
-# =========================
-# Modelo
-# =========================
+
+# ------------------ Modelo ------------------
 class WeatherPrediction(nn.Module):
-    def __init__(self, output_size):
-        super(WeatherPrediction, self).__init__()
+    def __init__(self):
+        super().__init__()
         self.fc = nn.Sequential(
             nn.Linear(3, 64),
             nn.ReLU(),
             nn.Linear(64, 128),
             nn.ReLU(),
-            nn.Linear(128, output_size)
+            nn.Linear(128, 3)
         )
 
     def forward(self, x):
         return self.fc(x)
 
-# =========================
-# Clase de entrenamiento
-# =========================
-class TrainModel:
-    def __init__(self, frame, output_size=3):
-        dataset = weatherDataset(frame)
-        self.dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
-        self.model = WeatherPrediction(output_size=output_size)
-        self.criterion = nn.MSELoss()
-        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)
-    
-    def train(self, epochs=80):
-        self.model.train()
-        for epoch in range(epochs):
-            total_loss = 0
-            for X, y in self.dataloader:
-                self.optimizer.zero_grad()
-                output = self.model(X)
-                loss = self.criterion(output, y)
-                loss.backward()
-                self.optimizer.step()
-                total_loss += loss.item()
-            avg_loss = total_loss / len(self.dataloader)  # ⚡ promedio por batch
-            print(f"🌀 Epoch [{epoch+1}/{epochs}] - Loss: {avg_loss:.4f}")
 
-    def save_model(self, path="weather_model.pt"):
-        torch.save(self.model.state_dict(), path)
-        print(f"✅ Modelo guardado en {path}")
+# ------------------ Entrenamiento y Predicción ------------------
+def predict_by_date(year, month, day):
+    # 1️⃣ Cargar dataset
+    dataset = WeatherDataset("datos.csv")
+    dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
 
-    def predict(self, year, month, day):
-        self.model.eval()
-        entrada = torch.tensor([[year, month, day]], dtype=torch.float32)
-        with torch.no_grad():
-            salida = self.model(entrada).numpy()[0]
-        return {
-            "T2M_MAX": round(salida[0], 2),
-            "T2M_MIN": round(salida[1], 2),
-            "PRECTOTCORR": round(salida[2], 2)
-        }
+    # 2️⃣ Crear modelo, pérdida y optimizador
+    model = WeatherPrediction()
+    criterion = nn.MSELoss()
+    optimizer = optim.Adam(model.parameters(), lr=0.01)
+
+    # 3️⃣ Entrenar el modelo
+    for epoch in range(80):  # Menos épocas para hacerlo más rápido
+        for x, y in dataloader:
+            optimizer.zero_grad()
+            y_pred = model(x)
+            loss = criterion(y_pred, y)
+            loss.backward()
+            optimizer.step()
+        if (epoch + 1) % 10 == 0:
+            print(f"Época {epoch+1}/30, Pérdida: {loss.item():.4f}")
+
+    # 4️⃣ Predecir
+    x_input = np.array([[year, month, day]])
+    x_scaled = dataset.scaler_x.transform(x_input)
+    x_tensor = torch.tensor(x_scaled, dtype=torch.float32)
+    y_pred = model(x_tensor).detach().numpy()
+    y_real = dataset.scaler_y.inverse_transform(y_pred)
+
+    return y_real[0].tolist()
