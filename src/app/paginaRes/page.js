@@ -69,7 +69,7 @@ const EnhancedWeatherPage = () => {
       name: 'Normal Day',
       description: 'Clear sky with some clouds',
       tempRange: '20-29°C',
-      textColor: 'text-black'
+      textColor: 'text-white'
     },
     sunny: {
       background: 'bg-gradient-to-br from-yellow-400 via-orange-400 to-red-500',
@@ -77,7 +77,7 @@ const EnhancedWeatherPage = () => {
       name: 'Hot Day',
       description: 'Intense sunlight, and warm weather',
       tempRange: '30°C+',
-      textColor: 'text-black'
+      textColor: 'text-white'
     },
     cloudy: {
       background: 'bg-gradient-to-br from-gray-400 via-gray-500 to-gray-600',
@@ -85,7 +85,7 @@ const EnhancedWeatherPage = () => {
       name: 'Cloudy Day',
       description: 'Cloud covered sky',
       tempRange: '10-19°C',
-      textColor: 'text-black'
+      textColor: 'text-white'
     },
     rainy: {
       background: 'bg-gradient-to-br from-blue-600 via-blue-700 to-gray-800',
@@ -93,7 +93,7 @@ const EnhancedWeatherPage = () => {
       name: 'Rainy Day',
       description: 'Persistent precipitation throughout the day',
       tempRange: '0-9°C',
-      textColor: 'text-black'
+      textColor: 'text-white'
     },
     snowy: {
       background: 'bg-gradient-to-br from-blue-100 via-blue-200 to-white',
@@ -101,7 +101,7 @@ const EnhancedWeatherPage = () => {
       name: 'Snowy Day',
       description: 'Snow falling and cold temperatures',
       tempRange: 'Below 0°C',
-      textColor: 'text-black'
+      textColor: 'text-gray-800'
     },
     hail: {
       background: 'bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600',
@@ -109,7 +109,7 @@ const EnhancedWeatherPage = () => {
       name: 'Hail Storm',
       description: 'Falling ice pellets, be careful!',
       tempRange: '0-5°C',
-      textColor: 'text-Black'
+      textColor: 'text-gray-800'
     },
     thunderstorm: {
       background: 'bg-gradient-to-br from-purple-800 via-gray-900 to-black',
@@ -117,7 +117,7 @@ const EnhancedWeatherPage = () => {
       name: 'Thunderstorm',
       description: 'Heavy rain with lightning and thunder',
       tempRange: '15°C+',
-      textColor: 'text-black'
+      textColor: 'text-white'
     }
   };
 
@@ -130,8 +130,8 @@ const EnhancedWeatherPage = () => {
           Enhanced Weather App
         </h1>
         
-        {/* Tarjeta de información del clima */}
-        <div className="bg-white bg-opacity-20 backdrop-blur-lg rounded-2xl p-8 max-w-md mx-auto border border-white border-opacity-30">
+        {/* Tarjeta de información del clima - Ahora con fondo blanco parcialmente transparente */}
+        <div className="bg-white/30 backdrop-blur-lg rounded-2xl p-8 max-w-md mx-auto border border-white/40 shadow-xl">
           <div className="text-center">
             <div className="text-6xl mb-4">{currentWeather.icon}</div>
             <h2 className={`text-3xl font-bold mb-2 ${currentWeather.textColor}`}>
@@ -152,20 +152,20 @@ const EnhancedWeatherPage = () => {
             
             {/* Información adicional de condiciones */}
             <div className="mt-6 grid grid-cols-2 gap-4">
-              <div className={`bg-black bg-opacity-20 rounded-lg p-3 ${currentWeather.textColor}`}>
-                <div className="text-whit opacity-80">Precipitation</div>
+              <div className="bg-black/20 rounded-lg p-3 text-white backdrop-blur-sm">
+                <div className="opacity-80 text-sm">Precipitation</div>
                 <div className="text-xl font-bold">{precipitation}%</div>
               </div>
-              <div className={`bg-black bg-opacity-20 rounded-lg p-3 ${currentWeather.textColor}`}>
-                <div className="text-white opacity-80">Wind Speed</div>
+              <div className="bg-black/20 rounded-lg p-3 text-white backdrop-blur-sm">
+                <div className="opacity-80 text-sm">Wind Speed</div>
                 <div className="text-xl font-bold">{windSpeed} km/h</div>
               </div>
             </div>
 
             {/* Indicadores de condiciones especiales */}
             {(weatherType === 'thunderstorm' || weatherType === 'hail') && (
-              <div className="mt-4 p-3 bg-red-500 bg-opacity-70 rounded-lg">
-                <p className="text-black font-bold text-sm">
+              <div className="mt-4 p-3 bg-red-500/70 rounded-lg backdrop-blur-sm">
+                <p className="text-white font-bold text-sm">
                   ⚠️ {weatherType === 'thunderstorm' 
                     ? 'Lightning danger - Seek shelter' 
                     : 'Hail warning - Protect yourself'}
@@ -174,8 +174,8 @@ const EnhancedWeatherPage = () => {
             )}
 
             {weatherType === 'snowy' && (
-              <div className="mt-4 p-3 bg-blue-500 bg-opacity-70 rounded-lg">
-                <p className="text-black font-bold text-sm">
+              <div className="mt-4 p-3 bg-blue-500/70 rounded-lg backdrop-blur-sm">
+                <p className="text-white font-bold text-sm">
                   ❄️ Cold weather alert - Dress warmly
                 </p>
               </div>
@@ -186,9 +186,9 @@ const EnhancedWeatherPage = () => {
 
         {/* Panel informativo adicional */}
         <div className="mt-8 max-w-md mx-auto">
-          <div className="bg-black bg-opacity-30 rounded-xl p-6">
-            <h3 className="text-black text-xl font-bold mb-4">Weather Conditions Guide</h3>
-            <div className="space-y-2 text-black text-sm">
+          <div className="bg-black/40 rounded-xl p-6 backdrop-blur-md border border-white/20">
+            <h3 className="text-white text-xl font-bold mb-4">Weather Conditions Guide</h3>
+            <div className="space-y-2 text-white text-sm">
               <p>❄️ <strong>Snowy:</strong> Temperature ≤ 0°C + Precipitation</p>
               <p>🌨️ <strong>Hail:</strong> Temperature ≤ 5°C + Heavy Precipitation</p>
               <p>⛈️ <strong>Thunderstorm:</strong> High Precipitation + Strong Wind</p>
