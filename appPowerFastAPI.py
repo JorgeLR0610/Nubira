@@ -1,12 +1,7 @@
-from functools import lru_cache
-
 from fastapi import FastAPI, HTTPException
-import torch
 from pydantic import BaseModel, Field
 import powerClient
 from datetime import datetime
-import pandas as pd
-import numpy as np
 from neuralNetwork.weather_predictions import predict_by_date
 
 app=FastAPI()
@@ -29,10 +24,10 @@ def getClima(request: ClimaRequest):
         
         formated_data = powerClient.convert_to_csv(raw_data, 'datos.csv', request.month, request.day)
 
-         # 3️⃣ Entrenar modelo y predecir (todo ocurre dentro de la función)
+         # Entrenar modelo y predecir (todo ocurre dentro de la función)
         prediccion = predict_by_date(request.year, request.month, request.day)
 
-        # 4️⃣ Retornar resultado
+        # Retornar resultado
         return {
             "mensaje": "Predicción generada correctamente (modelo entrenado en esta ejecución).",
             "prediccion": prediccion
