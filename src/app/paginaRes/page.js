@@ -1,4 +1,3 @@
-// app/paginaRes/page.js
 "use client"
 import { useState, useEffect } from 'react';
 import { Bar } from 'react-chartjs-2';
@@ -12,7 +11,7 @@ import {
   Legend
 } from 'chart.js';
 
-// Registrar componentes de Chart.js para gráfica de barras
+// Register Chart.js components for bar chart
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -24,62 +23,96 @@ ChartJS.register(
 
 const EnhancedWeatherPage = () => {
   const [weatherType, setWeatherType] = useState('normal');
-  const [temperature, setTemperature] = useState(22);
+  const [minTemperature, setMinTemperature] = useState(15);
+  const [maxTemperature, setMaxTemperature] = useState(25);
   const [precipitation, setPrecipitation] = useState(0);
   const [windSpeed, setWindSpeed] = useState(5);
+  const [address, setAddress] = useState('Loading location...');
   const [weatherHistory, setWeatherHistory] = useState([]);
   const [sampleCount, setSampleCount] = useState(0);
 
-  // Función para determinar el tipo de clima
-  const getWeatherTypeFromConditions = (temp, precip, wind) => {
-    if (precip > 70 && wind > 30 && temp > 15) return 'thunderstorm';
-    if (precip > 60 && temp <= 5) return 'hail';
-    if (precip > 50 && temp <= 0) return 'snowy';
-    if (temp >= 30) return 'sunny';
-    if (temp >= 20) return 'normal';
-    if (temp >= 10) return 'cloudy';
-    return 'rainy';
+  // Function to determine weather type based on average temperature
+  const getWeatherTypeFromConditions = (minTemp, maxTemp, precip, wind) => {
+    const avgTemp = (minTemp + maxTemp) / 2;
+    
+    if (precip > 70 && wind > 30 && avgTemp > 15) return 'thunderstorm';
+    if (precip > 60 && maxTemp <= 5) return 'hail';
+    if (precip > 50 && maxTemp <= 0) return 'snowy';
+    if (maxTemp >= 30) return 'sunny';
+    if (maxTemp >= 20 && minTemp >= 10) return 'normal';
+    if (maxTemp >= 15 && minTemp >= 5) return 'cloudy';
+    if (precip > 30) return 'rainy';
+    return 'cloudy';
   };
 
-  // Simular datos del backend
+  // Simulate backend data
   const simulateBackendData = () => {
-    const temps = [-5, -2, 0, 2, 5, 8, 12, 15, 18, 22, 25, 28, 32, 35];
-    const randomTemp = temps[Math.floor(Math.random() * temps.length)];
+    const baseTemps = [-5, -2, 0, 2, 5, 8, 12, 15, 18, 22, 25, 28, 32, 35];
+    const baseTemp = baseTemps[Math.floor(Math.random() * baseTemps.length)];
+    
+    // Generate min and max with reasonable difference (3-10 degrees)
+    const tempDifference = Math.floor(Math.random() * 8) + 3;
+    const randomMinTemp = baseTemp - Math.floor(tempDifference / 2);
+    const randomMaxTemp = baseTemp + Math.ceil(tempDifference / 2);
+    
     const randomPrecip = Math.floor(Math.random() * 101);
     const randomWind = Math.floor(Math.random() * 51);
     
+    // Simulate different addresses
+    const addresses = [
+      'Mexico City, CDMX',
+      'Guadalajara, Jalisco',
+      'Monterrey, Nuevo León',
+      'Puebla, Puebla',
+      'Cancún, Quintana Roo',
+      'Mérida, Yucatán',
+      'Tijuana, Baja California',
+      'Leon, Guanajuato'
+    ];
+    const randomAddress = addresses[Math.floor(Math.random() * addresses.length)];
+    
     return { 
-      temp: randomTemp, 
+      minTemp: randomMinTemp,
+      maxTemp: randomMaxTemp,
       precip: randomPrecip, 
       wind: randomWind,
+      address: randomAddress,
       timestamp: new Date().toLocaleTimeString(),
-      id: Date.now() + Math.random() // ID único para cada muestra
+      id: Date.now() + Math.random() // Unique ID for each sample
     };
   };
 
-  // Configuración de la gráfica de barras
+  // Bar chart configuration
   const getChartData = () => {
     const maxSamples = 5;
     const currentSamples = weatherHistory.slice(-maxSamples);
     
     const labels = currentSamples.map((data, index) => {
       const globalIndex = weatherHistory.length - maxSamples + index + 1;
-      return `M${globalIndex}`;
+      return `S${globalIndex}`;
     });
     
     return {
       labels,
       datasets: [
         {
-          label: 'Temperatura (°C)',
-          data: currentSamples.map(data => data.temp),
-          backgroundColor: 'rgba(255, 99, 132, 0.8)',
+          label: 'Min Temp (°C)',
+          data: currentSamples.map(data => data.minTemp),
+          backgroundColor: 'rgba(100, 149, 237, 0.8)', // Light blue
+          borderColor: 'rgb(70, 130, 180)',
+          borderWidth: 1,
+          yAxisID: 'y',
+        },
+        {
+          label: 'Max Temp (°C)',
+          data: currentSamples.map(data => data.maxTemp),
+          backgroundColor: 'rgba(255, 99, 132, 0.8)', // Red
           borderColor: 'rgb(255, 99, 132)',
           borderWidth: 1,
           yAxisID: 'y',
         },
         {
-          label: 'Precipitación (%)',
+          label: 'Precipitation (%)',
           data: currentSamples.map(data => data.precip),
           backgroundColor: 'rgba(54, 162, 235, 0.8)',
           borderColor: 'rgb(54, 162, 235)',
@@ -87,7 +120,7 @@ const EnhancedWeatherPage = () => {
           yAxisID: 'y1',
         },
         {
-          label: 'Viento (km/h)',
+          label: 'Wind (km/h)',
           data: currentSamples.map(data => data.wind),
           backgroundColor: 'rgba(75, 192, 192, 0.8)',
           borderColor: 'rgb(75, 192, 192)',
@@ -125,7 +158,7 @@ const EnhancedWeatherPage = () => {
         },
         title: {
           display: true,
-          text: 'Temperatura (°C)',
+          text: 'Temperature (°C)',
           color: 'white'
         }
       },
@@ -141,7 +174,7 @@ const EnhancedWeatherPage = () => {
         },
         title: {
           display: true,
-          text: 'Precipitación (%)',
+          text: 'Precipitation (%)',
           color: 'white'
         },
         max: 100
@@ -163,7 +196,7 @@ const EnhancedWeatherPage = () => {
       },
       title: {
         display: true,
-        text: `Carrusel de Muestras - Mostrando últimas 5 de ${sampleCount} totales`,
+        text: `Sample Carousel - Showing last 5 of ${sampleCount} total`,
         color: 'white',
         font: {
           size: 16,
@@ -187,30 +220,37 @@ const EnhancedWeatherPage = () => {
   useEffect(() => {
     const updateWeatherData = () => {
       const newData = simulateBackendData();
-      setTemperature(newData.temp);
+      setMinTemperature(newData.minTemp);
+      setMaxTemperature(newData.maxTemp);
       setPrecipitation(newData.precip);
       setWindSpeed(newData.wind);
-      setWeatherType(getWeatherTypeFromConditions(newData.temp, newData.precip, newData.wind));
+      setAddress(newData.address);
+      setWeatherType(getWeatherTypeFromConditions(
+        newData.minTemp, 
+        newData.maxTemp, 
+        newData.precip, 
+        newData.wind
+      ));
       
-      // Incrementar el contador de muestras
+      // Increment sample counter
       setSampleCount(prev => prev + 1);
       
-      // Agregar nueva muestra al historial
+      // Add new sample to history
       setWeatherHistory(prev => {
         return [...prev, newData];
       });
     };
 
-    // Datos iniciales
+    // Initial data
     updateWeatherData();
 
-    // Actualizar cada 5 segundos
+    // Update every 5 seconds
     const interval = setInterval(updateWeatherData, 5000);
 
     return () => clearInterval(interval);
   }, []);
 
-  // Obtener las últimas 5 muestras para mostrar
+  // Get last 5 samples to display
   const currentSamples = weatherHistory.slice(-5);
 
   const weatherConfig = {
@@ -226,7 +266,7 @@ const EnhancedWeatherPage = () => {
       background: 'bg-gradient-to-br from-yellow-400 via-orange-400 to-red-500',
       icon: '☀️',
       name: 'Hot Day',
-      description: 'Intense sunlight, and warm weather',
+      description: 'Intense sunlight and warm weather',
       tempRange: '30°C+',
       textColor: 'text-white'
     },
@@ -235,7 +275,7 @@ const EnhancedWeatherPage = () => {
       icon: '☁️',
       name: 'Cloudy Day',
       description: 'Cloud covered sky',
-      tempRange: '10-19°C',
+      tempRange: '15-19°C',
       textColor: 'text-white'
     },
     rainy: {
@@ -243,7 +283,7 @@ const EnhancedWeatherPage = () => {
       icon: '🌧️',
       name: 'Rainy Day',
       description: 'Persistent precipitation throughout the day',
-      tempRange: '0-9°C',
+      tempRange: '5-14°C',
       textColor: 'text-white'
     },
     snowy: {
@@ -281,27 +321,45 @@ const EnhancedWeatherPage = () => {
           Enhanced Weather App
         </h1>
         
-        {/* Contenedor principal con información del clima y gráfica */}
+        {/* Main container with weather info and chart */}
         <div className="flex flex-col lg:flex-row gap-8 max-w-6xl mx-auto">
           
-          {/* Tarjeta de información del clima */}
+          {/* Weather information card */}
           <div className="flex-1">
             <div className="bg-white/30 backdrop-blur-lg rounded-2xl p-8 border border-white/40 shadow-xl">
               <div className="text-center">
+                {/* Address */}
+                <div className="mb-6 p-3 bg-black/20 rounded-lg backdrop-blur-sm">
+                  <div className="opacity-80 text-sm text-white">Current Location</div>
+                  <div className="text-white font-bold text-lg">{address}</div>
+                </div>
+
                 <div className="text-6xl mb-4">{currentWeather.icon}</div>
                 <h2 className={`text-3xl font-bold mb-2 ${currentWeather.textColor}`}>
                   {currentWeather.name}
                 </h2>
                 
-                <div className={`text-5xl font-bold my-4 ${currentWeather.textColor}`}>
-                  {temperature}°C
+                {/* Minimum and Maximum Temperatures */}
+                <div className="flex justify-center items-center gap-6 my-4">
+                  <div className="text-center">
+                    <div className={`text-sm opacity-80 ${currentWeather.textColor}`}>Min</div>
+                    <div className={`text-3xl font-bold ${currentWeather.textColor}`}>
+                      {minTemperature}°C
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <div className={`text-sm opacity-80 ${currentWeather.textColor}`}>Max</div>
+                    <div className={`text-3xl font-bold ${currentWeather.textColor}`}>
+                      {maxTemperature}°C
+                    </div>
+                  </div>
                 </div>
                 
                 <p className={`opacity-90 mb-2 ${currentWeather.textColor}`}>
                   {currentWeather.description}
                 </p>
                 <p className={`opacity-80 text-sm mb-4 ${currentWeather.textColor}`}>
-                  Range: {currentWeather.tempRange}
+                  Typical range: {currentWeather.tempRange}
                 </p>
                 
                 <div className="mt-6 grid grid-cols-2 gap-4">
@@ -336,40 +394,47 @@ const EnhancedWeatherPage = () => {
             </div>
           </div>
 
-          {/* Gráfica de Barras - Carrusel */}
+          {/* Bar Chart - Carousel */}
           <div className="flex-1">
             <div className="bg-black/40 backdrop-blur-lg rounded-2xl p-6 border border-white/20 shadow-xl">
               {weatherHistory.length > 0 ? (
                 <div>
                   <Bar data={getChartData()} options={chartOptions} />
                   
-                  {/* Información del carrusel */}
-                  <div className="mt-6 grid grid-cols-3 gap-4">
-                    <div className="bg-red-500/20 rounded-lg p-3 text-center">
-                      <div className="text-white text-sm">Temp. Actual</div>
+                  {/* Carousel information */}
+                  <div className="mt-6 grid grid-cols-2 gap-4">
+                    <div className="bg-blue-500/20 rounded-lg p-3 text-center">
+                      <div className="text-white text-sm">Current Min Temp</div>
                       <div className="text-white font-bold text-lg">
-                        {temperature}°C
+                        {minTemperature}°C
                       </div>
                     </div>
+                    <div className="bg-red-500/20 rounded-lg p-3 text-center">
+                      <div className="text-white text-sm">Current Max Temp</div>
+                      <div className="text-white font-bold text-lg">
+                        {maxTemperature}°C
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 grid grid-cols-2 gap-4">
                     <div className="bg-blue-500/20 rounded-lg p-3 text-center">
-                      <div className="text-white text-sm">Precip. Actual</div>
+                      <div className="text-white text-sm">Current Precip.</div>
                       <div className="text-white font-bold text-lg">
                         {precipitation}%
                       </div>
                     </div>
                     <div className="bg-green-500/20 rounded-lg p-3 text-center">
-                      <div className="text-white text-sm">Viento Actual</div>
+                      <div className="text-white text-sm">Current Wind</div>
                       <div className="text-white font-bold text-lg">
                         {windSpeed} km/h
                       </div>
                     </div>
                   </div>
-
-                  
                 </div>
               ) : (
                 <div className="flex items-center justify-center h-64">
-                  <p className="text-white text-lg">Cargando datos del clima...</p>
+                  <p className="text-white text-lg">Loading weather data...</p>
                 </div>
               )}
             </div>
