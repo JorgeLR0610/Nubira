@@ -365,18 +365,7 @@ const EnhancedWeatherPage = () => {
                     </div>
                   </div>
 
-                  {/* Información del carrusel */}
-                  <div className="mt-4 text-center">
-                    <div className="text-white text-sm">
-                      {`Mostrando muestras ${Math.max(1, sampleCount - 4)} a ${sampleCount} de ${sampleCount} totales`}
-                    </div>
-                    <div className="text-white text-xs opacity-70 mt-1">
-                      {sampleCount > 5 
-                        ? 'Carrusel activo - Las muestras más antiguas se desplazan fuera de la vista'
-                        : 'Completando primeras 5 muestras...'
-                      }
-                    </div>
-                  </div>
+                  
                 </div>
               ) : (
                 <div className="flex items-center justify-center h-64">
