@@ -205,7 +205,10 @@ export default function ProfessionalMapModal({ isOpen, onClose, onLocationSelect
                     value={forecastDate}
                     onChange={(e) => setForecastDate(e.target.value)}
                     className="border text-black border-gray-300 rounded px-3 py-2 w-full max-w-xs"
-                    min={new Date().toISOString().split('T')[0]} // Prevent past dates
+                    min={new Date().toISOString().split('T')[0]} // fecha mínima = hoy
+                    max={new Date(new Date().setFullYear(new Date().getFullYear() + 5))
+                            .toISOString()
+                            .split('T')[0]} // fecha máxima = hoy + 5 años
                   />
                 </div>
               </div>
